@@ -16,18 +16,20 @@ router.post("/createuser", [
     body('email','Enter a valid email').isEmail(),
     body('password','Password must be 5 characters').isLength({min: 5}), 
 ],async (req, res)=>{ 
-
+    let success = false;
     //if there are errors exist, return bad request and errors
     const result = validationResult(req);
     if (!result.isEmpty()) {
-        return res.status(400).json({ errors: result.array() });
+        success = false;
+        return res.status(400).json({success, errors: result.array() });
     }
     
     try{
     //check wheather the user with this email exist already
     let user = await User.findOne({email: req.body.email});
     if (user){
-        return res.status(400).json({error: "Sorry the user with this email already exist" })
+        success = false;
+        return res.status(400).json({success, error: "Sorry the user with this email already exist" })
     }
     //creating salt for bycrypt
     const salt = await bcrypt.genSaltSync(10);
@@ -48,9 +50,10 @@ router.post("/createuser", [
         user: {
             id : user.id
         }
-    }
-    const authToken = jwt.sign(data, JWT_SECRET)
-    res.json({authToken});
+    } 
+    const authToken = jwt.sign(data, JWT_SECRET);
+    success = true;
+    res.json({success, authToken});
     }
     //catching the errors there after 
     catch(error){
@@ -79,6 +82,7 @@ router.post("/login", [
     body('email','Enter a valid email').isEmail(),
     body('password','Password cannot be blank').exists(), 
 ],async (req, res)=>{
+    let success = false;
     //if there are errors exist, return bad request and errors
     const result = validationResult(req);
     if (!result.isEmpty()) {
@@ -97,7 +101,7 @@ router.post("/login", [
         if (!comparePassword){
             success= false;
             return res.status(400).json({success, error: "Please enter the correct login credentials"})
-        }
+        } 
 
         const data = {
             user: {

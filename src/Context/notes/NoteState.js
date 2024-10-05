@@ -4,7 +4,7 @@ import NoteContext from './NoteContext';
 
 const NoteState = (props) =>{
     const host = "http://localhost:5000"
-    const notesInitial = []
+    const notesInitial = [];
 
 //     const s1 = {
 //         "name": "Sarvesh",
@@ -20,17 +20,42 @@ const NoteState = (props) =>{
 //             })
 //         }, 1000)
 //     }
+
     const [notes, setNotes] = useState(notesInitial);
 
     //Get all note 
     const getNote = async () =>{
+        //handle object logic --> not usefull in our case but might be usefull in some other scenario (just view)
+        // try{
+        //     const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+        //         method: "GET",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "auth-token": localStorage.getItem("token")
+        //         },
+        //     });
+        //     const json = await response.json(); 
+        //     console.log(json);
+            
+        //     if (Array.isArray(json)) {
+        //         setNotes(json); // Ensure that you're setting an array of notes
+        //     } 
+        //     else {
+        //         setNotes([]); // Fallback if it's not an array
+        //     }    
+        // }
+        // catch (error) {
+        //     console.error("Error fetching notes:", error);
+        // }
+
+
 
         //TODO : API call
         const response = await fetch(`${host}/api/notes/fetchallnotes`, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5YWJkMGQxMTQ2ZWNlYzM4YTE2ZjgyIn0sImlhdCI6MTcyMTQ4MTUzM30.G1AeNU266c1pgxtH3Yd81qU1uZZBCTR57CWed6_JJMU"
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token")
             },
         });
         const json = await response.json(); 
@@ -46,13 +71,13 @@ const NoteState = (props) =>{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5YWJkMGQxMTQ2ZWNlYzM4YTE2ZjgyIn0sImlhdCI6MTcyMTQ4MTUzM30.G1AeNU266c1pgxtH3Yd81qU1uZZBCTR57CWed6_JJMU"
+                "auth-token": localStorage.getItem("token")
             },
             body: JSON.stringify({title, description, tags}),
         });
 
         const note = await response.json();
-        setNotes(notes.concat(note))
+        setNotes(notes.concat(note));
     }
 
 
@@ -64,7 +89,7 @@ const NoteState = (props) =>{
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5YWJkMGQxMTQ2ZWNlYzM4YTE2ZjgyIn0sImlhdCI6MTcyMTQ4MTUzM30.G1AeNU266c1pgxtH3Yd81qU1uZZBCTR57CWed6_JJMU"
+                "auth-token": localStorage.getItem("token")
             },
         });
         const json = response.json();
@@ -86,7 +111,7 @@ const NoteState = (props) =>{
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5YWJkMGQxMTQ2ZWNlYzM4YTE2ZjgyIn0sImlhdCI6MTcyMTQ4MTUzM30.G1AeNU266c1pgxtH3Yd81qU1uZZBCTR57CWed6_JJMU"
+                "auth-token": localStorage.getItem("token")
             },
             body: JSON.stringify({title, description, tags}),
         });
